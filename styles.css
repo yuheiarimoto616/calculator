@@ -47,12 +47,29 @@ body {
     padding: 15px;
     box-shadow: 4px 5px 5px 0px black;
     cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.buttons>div:active {
+    transform: translateY(0px);
 }
 
 .digits:hover {
     background-color: #F8F1F1;
     color: #E57C23;
-    transform: translateY(-0.2rem);
+    transform: translateY(-4px);
+}
+
+.clear:hover {
+    background-color: #F45050;
+    color: #F8F1F1;
+    transform: translateY(-4px);
+}
+
+.operator:hover {
+    background-color: #D3D04F;
+    color: #F8F1F1;
+    transform: translateY(-4px);
 }
 
 #zero {
