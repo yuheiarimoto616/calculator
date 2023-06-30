@@ -14,11 +14,20 @@ body {
 
 .display {
     border-radius: 10px;
-    color: #E57C23;
     text-align: right;
     padding: 12px;
     background-color: #F8F1F1;
     margin-bottom: 10px;
+}
+
+.inputs {
+    color: #E57C23;
+    font-size: 22px;
+}
+
+.results {
+    color: #025464;
+    font-size: 36px;
 }
 
 .calculator {
