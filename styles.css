@@ -72,6 +72,12 @@ body {
     transform: translateY(-4px);
 }
 
+.equal:hover {
+    background-color: #4FC0D0;
+    color: #F8F1F1;
+    transform: translateY(-4px);
+}
+
 #zero {
     flex: 1 1 0;
     border-radius: 35px;
