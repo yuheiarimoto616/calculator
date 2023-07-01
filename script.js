@@ -19,16 +19,23 @@ function modulo(x, y) {
 }
 
 function operate(op, x, y) {
+    let result;
     if (op == '+') {
-        return add(x, y);
+        result = add(x, y);
     } else if (op == '-') {
-        return subtract(x, y);
+        result = subtract(x, y);
     } else if (op == '×') {
-        return multiply(x, y);
+        result = multiply(x, y);
     } else if (op == '%') {
-        return modulo(x, y);
+        result = modulo(x, y);
     } else {
-        return divide(x, y);
+        result = divide(x, y);
+    }
+
+    if (isNaN(result) || result == Infinity) {
+        return 'Error';
+    } else {
+        return Math.round(result * 100) / 100;
     }
 }
 
@@ -42,24 +49,46 @@ function updateDisplay(e) {
 
         if (userInput.operator != null) {
             if (userInput.y == null) {
-                userInput.y = e.target.textContent;
-            } else {
-                if (userInput.y == '0' && e.target.id != 'zero') {
+                if (e.target.id == 'dot') {
+                    userInput.y = '0.';
+                    document.getElementById('dot').removeEventListener('click', updateDisplay);
+                } else {
                     userInput.y = e.target.textContent;
-                } else if (userInput.y != '0') {
-                    userInput.y += e.target.textContent;
                 }
+            } else {
+                if (userInput.y != '0') {
+                    if (e.target.id == 'dot') {
+                        document.getElementById('dot').removeEventListener('click', updateDisplay);
+                    }
+                    userInput.y += e.target.textContent;
+                } else if (userInput.y == '0' && e.target.id != 'zero') {
+                    if (e.target.id == 'dot') {
+                        userInput.y += e.target.textContent;
+                        document.getElementById('dot').removeEventListener('click', updateDisplay);
+                    } else {
+                        userInput.y = e.target.textContent;
+                    }
+                } 
             }
         } else {
             if (userInput.x == '0' && e.target.id != 'zero') {
-                userInput.x = e.target.textContent;
+                if (e.target.id == 'dot') {
+                    document.getElementById('dot').removeEventListener('click', updateDisplay);
+                    userInput.x += e.target.textContent;
+                } else {
+                    userInput.x = e.target.textContent;
+                }
             } else if (userInput.x != '0') {
+                if (e.target.id == 'dot') {
+                    document.getElementById('dot').removeEventListener('click', updateDisplay);
+                }
                 userInput.x += e.target.textContent;
             }
         }
     } else if (e.target.className == 'operator') {
+        document.getElementById('dot').addEventListener('click', updateDisplay);
         if (userInput.y != null) {
-            userInput.x = operate(userInput.operator, Number.parseInt(userInput.x), Number.parseInt(userInput.y));
+            userInput.x = operate(userInput.operator, Number.parseFloat(userInput.x), Number.parseFloat(userInput.y));
             userInput.y = null;
         }
         userInput.operator = e.target.textContent;
@@ -75,7 +104,7 @@ function updateDisplay(e) {
 
 function displayResult() {
     if (userInput.y != null) {
-        result = operate(userInput.operator, Number.parseInt(userInput.x), Number.parseInt(userInput.y));
+        result = operate(userInput.operator, Number.parseFloat(userInput.x), Number.parseFloat(userInput.y));
         let resultDisplay = document.querySelector('.results');
         resultDisplay.textContent = result;
     }
@@ -87,6 +116,8 @@ function clearAll() {
         operator: null,
         y: null
     };
+
+    document.getElementById('dot').addEventListener('click', updateDisplay);
 
     result = null;
     let resultDisplay = document.querySelector('.results');
@@ -105,6 +136,9 @@ function backspace() {
         if (userInput.y.length == 1) {
             userInput.y = null;
         } else {
+            if (userInput.y.charAt(userInput.y.length - 1) == '.') {
+                document.getElementById('dot').addEventListener('click', updateDisplay);
+            }
             userInput.y = userInput.y.slice(0, userInput.y.length - 1);
         }
     } else if (userInput.operator != null) {
@@ -113,6 +147,9 @@ function backspace() {
         if (userInput.x.length == 1) {
             userInput.x = '0';
         } else {
+            if (userInput.x.charAt(userInput.x.length - 1) == '.') {
+                document.getElementById('dot').addEventListener('click', updateDisplay);
+            }
             userInput.x = userInput.x.slice(0, userInput.x.length - 1);
         }
     }
