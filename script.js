@@ -35,7 +35,11 @@ function operate(op, x, y) {
     if (isNaN(result) || result == Infinity) {
         return 'Error';
     } else {
-        return Math.round(result * 100) / 100;
+        result = Math.round(result * 100) / 100;
+        if (result.toString().length >= 15) {
+            result = result.toExponential(2);
+        }
+        return result;
     }
 }
 
@@ -61,17 +65,17 @@ function updateDisplay(e) {
                         document.getElementById('dot').removeEventListener('click', updateDisplay);
                     }
                     userInput.y += e.target.textContent;
-                } else if (userInput.y == '0' && e.target.id != 'zero') {
+                } else if (userInput.y == '0' && e.target.id != 'digit-0') {
                     if (e.target.id == 'dot') {
                         userInput.y += e.target.textContent;
                         document.getElementById('dot').removeEventListener('click', updateDisplay);
                     } else {
                         userInput.y = e.target.textContent;
                     }
-                } 
+                }
             }
         } else {
-            if (userInput.x == '0' && e.target.id != 'zero') {
+            if (userInput.x == '0' && e.target.id != 'digit-0') {
                 if (e.target.id == 'dot') {
                     document.getElementById('dot').removeEventListener('click', updateDisplay);
                     userInput.x += e.target.textContent;
@@ -100,6 +104,28 @@ function updateDisplay(e) {
 
     let inputDisplay = document.querySelector('.inputs');
     inputDisplay.textContent = Object.values(userInput).join(" ");
+}
+
+function executeKey(e) {
+    let getOperator = {
+        '/': 'divide',
+        '*': 'multiply',
+        '+': 'plus',
+        '-': 'minus',
+        '%': 'modulo'
+    };
+
+    if (!isNaN(e.key) && e.key != ' ') {
+        document.getElementById(`digit-${e.key}`).click();
+    } else if (e.key == '.') {
+        document.getElementById('dot').click();
+    } else if (e.key == 'Backspace' || e.key ==='c') {
+        document.getElementById('c').click();
+    } else if (['/', '%', '+', '-', '*'].includes(e.key)) {
+        document.getElementById(getOperator[e.key]).click();
+    } else if (e.key == 'Enter' || e.key == '=') {
+        document.getElementById('equal').click();
+    }
 }
 
 function displayResult() {
@@ -181,3 +207,4 @@ allClear.addEventListener('click', clearAll);
 
 clear.addEventListener('click', backspace);
 
+document.addEventListener('keydown', executeKey);
